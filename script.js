@@ -14,6 +14,7 @@ function startGame() {
 function showInitialScene() {
     const scene = sceneMap.find(scene => scene.id === 1);
     displayImage('./images/forest_path.png')
+    displayMessage("You are in a dark and creepy looking forest. The sun is setting and it is getting dark quickly.")
     displayMessage(scene.text);
     scene.options.forEach(option => {
         if (showOption(option)) {
@@ -125,18 +126,22 @@ function selectOption(option) {
 const sceneMap = [
     {
         id: 1, // spawn
-        text: `You are in a dark and creepy looking forest, the sun is setting as you see
-        a tall, dark and abandoned house in front of you...<br><br>
+        text: `You see a tall, dark and abandoned house in front of you...<br><br>
         To the west you can hear a distant sound of a car going past.`,
         image: './images/forest_path.png',
         options: [
             {
                 text: 'Approach House',
+                chosenText: `As you begin walking towards the house you hear a rustling in the trees behind you.<br>
+                You quickly turn around to see nothing but trees.`,
                 image: './images/house.png',
                 nextScene: 2,
             },
             {
                 text: 'Head West',
+                chosenText: `As you walk left you can see that there is a clearing in the forest ahead.<br>
+                At the edge of the forst there is a fence which looks to be too tall to climb with barbed wire on top.<br>
+                You could go back the way you came, or maybe try and climb over the fence?`,
                 image: './images/forest_clearing.png',
                 nextScene: 3,
             },
@@ -144,8 +149,7 @@ const sceneMap = [
     },
     {
         id: 2, // outside_mystery_person
-        text: `As you begin walking towards the house you hear a rustling in the trees behind you.<br>
-        You quickly turn around to see nothing but trees.`,
+        text: ``,
         options: [
             {
                 text: 'Continue to the house',
@@ -153,14 +157,14 @@ const sceneMap = [
                 You attempt to open the door but it doesn't move at all.<br>
                 You must find another way around...`,
                 image: './images/front_house.png',
-                nextScene: 2,
+                nextScene: 11,
             },
             {
                 text: 'Look for the noise',
                 chosenText: `As you walk forward away from the house you can see that there is a clearing in the forest ahead.<br>
                 You reach the clearing and stop. Slowly, you turn around a full 360 degrees but see nothing.<br>
                 You feel a sharp pain in your back before falling to the ground.<br>
-                As you fall you notice something coming towards you before you black out!`,
+                As you fade out of consciousness, you notice something stood over you before you black out!`,
                 image: './images/dark_figure.png',
                 nextScene: 4,
             },
@@ -168,9 +172,7 @@ const sceneMap = [
     },
     {
         id: 3, // clearing
-        text: `As you walk left you can see that there is a clearing in the forest ahead.<br>
-        At the edge of the forst there is a fence which looks to be too tall to climb with barbed wire on top.<br>
-        You could go back the way you came, or maybe try and climb over the fence?`,
+        text: ``,
         options: [
             {
                 text: 'Climb Fence',
@@ -319,8 +321,8 @@ const sceneMap = [
                 nextScene: 7,
             },
             {
-                text: 'Pick up teddy',
-                chosenText: `You pick up the battered teddy.<br>
+                text: 'Pick up key',
+                chosenText: `You pick up the key the battered teddy is holding.<br>
                 You hear another creak on the stairs and race out of the room...`,
                 image: './images/upstairs_hallway.png',
                 setState: { teddy: true },
@@ -359,6 +361,26 @@ const sceneMap = [
             {
 
             }
+        ]
+    },
+    {
+        id: 11, // outside_move_to_back_of_house
+        text: ``,
+        options: [
+            {
+                text: 'Look around',
+                chosenText: `As you walk around the side of the house and turn the corner you feel a
+                sharp pain in your back before falling to the ground.<br>
+                As you fade out of consciousness, you notice something stood over you before you black out!`,
+                image: './images/dark_figure.png',
+                nextScene: 4,
+            },
+            {
+                text: 'Go back',
+                chosenText: 'You head back to the start',
+                nextScene: 1,
+                hideDestinationText: true,
+            },
         ]
     }
 ]

@@ -16,25 +16,13 @@ body.game {
     align-items: center;
 }
 
-.gameContainer {
-    align-items: normal;
-    height: 100%;
-}
-
 /* Centered text */
 .centered {
-    font-size: 3em;
-    font-family: Montserrat, sans-serif;
-    font-weight: 600;
+    font-size: 8em;
+    /* font-family: Montserrat, sans-serif; */
+    font-family: "Creepster", sans-serif;
     line-height: 1;
     text-align: center;
-}
-
-.game-centered {
-    color: red;
-    margin: 0px;
-    padding-top: 20px;
-    font-family: 'Courier New', Courier, monospace;
 }
 
 .sectionAccent {
@@ -71,8 +59,8 @@ div.contentOverlay {
     position: absolute;
     background-color: rgba(00, 00, 00, 0.7);
     overflow-y: auto;
-    height: 80%;
-    width: 80%;
+    height: 98%;
+    width: 98%;
 }
 
 /* Home page Image Style */
@@ -171,8 +159,8 @@ li.navbar a {
         font-size: 16px;
     }
     div.contentOverlay {
-        height: 80%;
-        width: 80%;
+        height: 85%;
+        width: 85%;
     }
 }
 

@@ -9,21 +9,40 @@
         <link rel="icon" type="image/png" href="./images/favicon.png">
     </head>
     
-    <body>
+    <body class="game">
         <div class="sticky">
             <ul class="navbar">
                 <li class="navbar"><a href="index.html">The Awakening</a></li>
                 <li class="navbar"><a class="active" href='game.html'>Play</a></li>
-                <li class="navbar"><a href='howtoplay.html'>How to Play</a></li>
             </ul>
+
+            <div class="container gameContainer">
+                <div class="backgroundOverlay">
+                    <div class="centered game-centered">The Awakening</div>
+                </div>
+            </div>
+
+            <a onclick="toggleSoundOnOff();">
+                <div class="soundToggleButton">
+                    <img id="soundToggle" class="soundToggle" src="./images/no_audio.png" alt="Audio off">
+                    <audio id="audio" loop="true"></audio>
+                    <audio id="soundEffect"></audio>
+                </div>
+            </a>
         </div>
 
-        <div class="content" id="output"></div>
+        <div class="container">
+            <img class="background" src="./images/background.png" alt="The Awakening">
+            
+            <div id="contentOverlay" class="contentOverlay">
+                <div class="content" id="output"></div>
 
-        <div class="content">
-            <div id="optionButtons" class="buttonGrid"></div>
+                <div class="content">
+                    <div id="optionButtons" class="buttonGrid"></div>
+                </div>
+            </div>
         </div>
-        
+
         <script src="./script.js"></script>
     </body>
 </html>

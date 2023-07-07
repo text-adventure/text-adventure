@@ -1,5 +1,63 @@
+// =============
+// SOUND MANAGER
+// =============
+const audio = document.getElementById("audio");
+const soundEffect = document.getElementById("soundEffect");
+const soundButton = document.getElementById("soundToggle")
+var soundOn = false;
+var currentAudio = "";
+var currentAudioVolume = 0;
+
+function toggleSoundOnOff()  {
+    if (soundOn == true) {
+        soundOn = false
+        soundButton.src = "./images/no_audio.png";
+        audio.pause();
+    } else if (soundOn == false) {
+        soundOn = true
+        soundButton.src = "./images/audio.png";
+        audio.volume = currentAudioVolume;
+        audio.play();
+    }
+}
+
+function playSound(soundType, soundFile, volume) {
+    if (soundFile) {
+        if (soundType === audio) {
+            if (currentAudio != soundFile) {
+                currentAudio = soundFile;
+                currentAudioVolume = volume;
+                audio.src = soundFile;
+                audio.pause();
+            }
+
+            if (soundOn == true) {
+                audio.volume = currentAudioVolume;
+                audio.play();
+            }
+        
+        } else if (soundType === soundEffect) {
+            soundEffect.src = soundFile;
+            soundEffect.pause();
+
+            if (soundOn == true) {
+                soundEffect.volume = volume;
+                soundEffect.play();
+            }
+        } 
+    }
+}
+
+
+
+
+
+// =============
+// GAME MANAGER
+// =============
 const outputBox = document.getElementById("output");
 const optionButtons = document.getElementById("optionButtons");
+const contentOverlayBox = document.getElementById("contentOverlay");
 
 let state = {}
 var previousSceneIndex = 0;
@@ -14,6 +72,7 @@ function startGame() {
 function showInitialScene() {
     const scene = sceneMap.find(scene => scene.id === 1);
     displayImage('./images/forest_path.png')
+    playSound(audio, scene.audio, scene.audioVolume);
     displayMessage("You are in a dark and creepy looking forest. The sun is setting and it is getting dark quickly.")
     displayMessage(scene.text);
     scene.options.forEach(option => {
@@ -25,13 +84,14 @@ function showInitialScene() {
             optionButtons.appendChild(button);
         }
     })
-    window.scrollTo(0, document.body.scrollHeight);
+    contentOverlayBox.scrollTop = contentOverlayBox.scrollHeight;
 }
 
 function changeScene(sceneIndex, previousOption) {
     const scene = sceneMap.find(scene => scene.id === sceneIndex);
     if (scene == null) return;
-    displayImage(scene.image)
+    displayImage(scene.image);
+    playSound(audio, scene.audio, scene.audioVolume);
 
     if (sceneIndex != previousSceneIndex) {
         if (previousOption.hideDestinationText == null) {
@@ -55,7 +115,6 @@ function changeScene(sceneIndex, previousOption) {
             optionButtons.appendChild(button);
         })
     }
-    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function displayImage(imageURL) {
@@ -80,7 +139,25 @@ function showOption(option) {
 }
 
 function checkDead(nextSceneId, option) {
-    if (nextSceneId <= 0) {
+    if (nextSceneId == -2) { //WIN
+        playSound(audio, './sound/uplifting_track.mp3', '0.2');
+        displayMessage("<br><br>YOU ESCAPED<br>");
+        while (optionButtons.firstChild) {
+            optionButtons.removeChild(optionButtons.firstChild);
+        }
+        const button = document.createElement('button');
+        button.innerText = "PLAY AGAIN";
+        button.classList.add('optionButton');
+        button.addEventListener('click', () => startGame());
+        optionButtons.appendChild(button);
+        const button2 = document.createElement('button');
+        button2.innerText = "MAIN MENU";
+        button2.classList.add('optionButton');
+        button2.addEventListener('click', () => window.location.href = "index.html");
+        optionButtons.appendChild(button2);
+
+    } else if (nextSceneId == -1) { //LOSS
+        playSound(audio, './sound/failure.mp3', '0.2');
         displayMessage("<br><br>GAME OVER");
         while (optionButtons.firstChild) {
             optionButtons.removeChild(optionButtons.firstChild);
@@ -89,7 +166,8 @@ function checkDead(nextSceneId, option) {
         button.innerText = "RETRY";
         button.classList.add('retryButton');
         button.addEventListener('click', () => startGame());
-        optionButtons.appendChild(button);
+        outputBox.appendChild(button);
+
     } else {
         changeScene(nextSceneId, option);
     }
@@ -100,9 +178,11 @@ function selectOption(option) {
 
     if (option.requiredState) {
         if (option.requiredState(state)) {
+            playSound(soundEffect, option.audio, option.audioVolume);
             displayImage(option.image)
             displayMessage(option.chosenText);
         } else {
+            playSound(soundEffect, option.missingStateAudio, option.missingStateAudioVolume);
             displayImage(option.missingStateImage)
             displayMessage(option.missingStateText);
             state = Object.assign(state, option.setState);
@@ -113,6 +193,7 @@ function selectOption(option) {
             return;
         }
     } else if (option.chosenText) {
+        playSound(soundEffect, option.audio, option.audioVolume);
         displayImage(option.image)
         displayMessage(option.chosenText);
     }
@@ -129,6 +210,8 @@ const sceneMap = [
         text: `You see a tall, dark and abandoned house in front of you...<br><br>
         To the west you can hear a distant sound of a car going past.`,
         image: './images/forest_path.png',
+        audio: './sound/outside_ambience.mp3',
+        audioVolume: 0.05,
         options: [
             {
                 text: 'Approach House',
@@ -194,6 +277,8 @@ const sceneMap = [
         You notice a small barred window to the right of the room and a dark, oak wooden door in front...<br><br>
         To the left you can see a small bed without any sheets and behind you is a cabinet.`,
         image: './images/bedroom.png',
+        audio: './sound/house_ambience.mp3',
+        audioVolume: 0.2,
         options: [
             {
                 text: 'Look out window',
@@ -217,8 +302,12 @@ const sceneMap = [
             },
             {
                 text: 'Go to door',
-                chosenText: `You walk across to the wooden door and turn the handle.`,
+                chosenText: `You walk across to the wooden door and turn the handle.<br>
+                The door creaks open to reveal a small corridor with stairs leading down in front of you.<br>
+                The first room is behind you, a door to the left and another door to the right of you.`,
                 image: './images/upstairs_hallway.png',
+                audio: './sound/wooden_door_creak.mp3',
+                audioVolume: 0.2,
                 nextScene: 7,
                 requiredState: (currentState) => currentState.flashlight,
                 missingStateText: `It is too dark to see outside the door. You realise you need to find a source of light...`,
@@ -234,7 +323,7 @@ const sceneMap = [
                 chosenText: `You slide under the bed quickly.<br><br>
                 You are followed into the room by a dark figure but were just quick enough to not be caught.<br><br>
                 You slide out from the bed cautiously and look back at the rest of the room.`,
-                image: './images/underbed.png',
+                image: './images/under_bed.png',
                 requiredState: (currentState) => currentState.followed,
                 missingStateText: `You choose not to hide under the bed unless necessary, as there are spiders under there.`,
                 setState: { followed: false },
@@ -274,23 +363,26 @@ const sceneMap = [
     },
     {
         id: 7, // upstairs_hallway
-        text: `The door creaks open to reveal a small corridor with stairs leading down on the left.<br>
-        The first room is behind you, a metal door in front of you and a wooden door to the right of you.`,
+        text: ``,
         options: [
             {
-                text: 'Try metal door',
-                chosenText: `You walk across to the metal door and turn the handle.<br>
-                Nothing happens as the door is locked.`,
-                image: './images/upstairs_hallway.png',
-                nextScene: 7,
-            },
-            {
-                text: 'Try wooden door',
-                chosenText: `You walk across to the wooden door and turn the handle.<br>
+                text: 'Open door on left',
+                chosenText: `You walk across to the door and turn the handle.<br>
                 Inside you see what looks like an old nursery.
                 However, it is full of cobwebs and spiders as if it hasn't been used in ages!`,
                 image: './images/nursery.png',
                 nextScene: 8,
+            },
+            {
+                text: 'Open door on right',
+                chosenText: `You walk across to the door and turn the handle.<br>
+                You can see a bed, a curtain and a closet.`,
+                nextScene: 10,
+                requiredState: (currentState) => currentState.upstairsBedroomKey,
+                missingStateText: `You walk across to the door and turn the handle.<br>
+                Nothing happens as the door is locked.`,
+                missingStateScene: 7,
+                missingStateImage: './images/upstairs_hallway.png',
             },
             {
                 text: 'Go to staircase',
@@ -325,7 +417,7 @@ const sceneMap = [
                 chosenText: `You pick up the key the battered teddy is holding.<br>
                 You hear another creak on the stairs and race out of the room...`,
                 image: './images/upstairs_hallway.png',
-                setState: { teddy: true },
+                setState: { upstairsBedroomKey: true },
                 nextScene: 7,
             },
         ]
@@ -344,7 +436,7 @@ const sceneMap = [
                 missingStateText: `You walk down the stairs dodging any loose or creaky steps.<br>
                 You reach the bottom and look around...`,
                 missingStateImage: './images/downstairs_hallway.png',
-                missingStateScene: -1,
+                missingStateScene: -2,
             },
             {
                 text: 'Back to hallway',
@@ -355,12 +447,31 @@ const sceneMap = [
         ]
     },
     {
-        id: 10, // downstairs_hallway
-        text: ` >>>>> To Be Continued <<<<< `,
+        id: 10, // upstairs_bedroom
+        text: ``,
         options: [
             {
-
-            }
+                text: 'Check inside closet',
+                chosenText: `A figure jumps out and kills you before you can even scream for help.`,
+                image: './images/figure_standing_over_you.jpg',
+                nextScene: -1,
+            },
+            {
+                text: 'Check under bed',
+                chosenText: `You searched under the bed but found nothing of interest.`,
+                nextScene: 10,
+            },
+            {
+                text: 'Check behind curtain',
+                chosenText: `You checked behind the curtain but found nothing.`,
+                nextScene: 10,
+            },
+            {
+                text: 'Leave room',
+                chosenText: `You return to the upstairs hallway.`,
+                image: './images/upstairs_hallway.png',
+                nextScene: 7,
+            },
         ]
     },
     {
@@ -382,7 +493,16 @@ const sceneMap = [
                 hideDestinationText: true,
             },
         ]
-    }
+    },
+    {
+        id: 12, // downstairs_hallway
+        text: ` >>>>> To Be Continued <<<<< `,
+        options: [
+            {
+
+            }
+        ]
+    },
 ]
 
 startGame()

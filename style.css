@@ -1,4 +1,9 @@
+html {
+    height: 100%;
+}
+
 body {
+    height: 100%;
     margin: 0px;
     background-color: lightblue;
 }
@@ -8,7 +13,7 @@ body.game {
 }
 
 .container {
-    height: 100vh;
+    height: 100%;
     text-align: center;
     color: white;
     justify-content: center;
@@ -18,7 +23,7 @@ body.game {
 
 /* Centered text */
 .centered {
-    font-size: 8em;
+    font-size: 3em;
     /* font-family: Montserrat, sans-serif; */
     font-family: "Creepster", sans-serif;
     line-height: 1;
@@ -59,7 +64,7 @@ div.contentOverlay {
     position: absolute;
     background-color: rgba(00, 00, 00, 0.7);
     overflow-y: auto;
-    height: 98%;
+    height: 85%;
     width: 98%;
 }
 
@@ -161,6 +166,9 @@ li.navbar a {
     div.contentOverlay {
         height: 85%;
         width: 85%;
+    }
+    .centered {
+        font-size: 8em;
     }
 }
 

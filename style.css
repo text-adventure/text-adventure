@@ -5,7 +5,14 @@ html {
 body {
     height: 100%;
     margin: 0px;
-    background-color: lightblue;
+    background-color: black;
+}
+
+body.home {
+    background-image: url('./images/background.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 body.game {
@@ -24,7 +31,6 @@ body.game {
 /* Centered text */
 .centered {
     font-size: 3em;
-    /* font-family: Montserrat, sans-serif; */
     font-family: "Creepster", sans-serif;
     line-height: 1;
     text-align: center;
@@ -79,11 +85,20 @@ img.background {
 /* Sound toggle Image Style */
 img.soundToggle {
     position: absolute;
-    top: 5px;
-    right: 15px;
     object-fit: contain;
+    top: 5px;
+    right: 70px;
     width: 35px;
     height: 35px;
+}
+
+img.fullscreenToggle {
+    position: absolute;
+    object-fit: contain;
+    top: 10px;
+    right: 20px;
+    width: 25px;
+    height: 25px;
 }
 
 div.soundToggleButton {
@@ -130,6 +145,17 @@ div.sticky {
     border-bottom: 0px;
 }
 
+.homeContent {
+    width: 80%;
+    margin: auto;
+    border-bottom: 0px;
+    text-align: center;
+    color: white;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
 
 /* Navbar list */
 ul.navbar {
@@ -170,6 +196,9 @@ li.navbar a {
     .centered {
         font-size: 8em;
     }
+    .homeContent {
+        width: 40%;
+    }
 }
 
 li.navbar a:hover:not(.active) {
@@ -177,7 +206,7 @@ li.navbar a:hover:not(.active) {
 }
 
 .active {
-    background-color: #04AA6D;
+    background-color: hsl(200, 100%, 50%);
 }
 
 
@@ -201,9 +230,10 @@ input.inputField {
 
 /* Default Paragraph Style */
 p.text {
-    color: navy;
-    margin-left: 20px;
-    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    font-size: 22px;
+    font-family: Montserrat, sans-serif;
+    text-align: center;
 }
 
 

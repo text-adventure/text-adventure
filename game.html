@@ -10,7 +10,7 @@
     </head>
     
     <body class="game">
-        <div class="sticky">
+        <nav class="sticky">
             <ul class="navbar">
                 <li class="navbar"><a href="index.html">The Awakening</a></li>
                 <li class="navbar"><a class="active" href='game.html'>Play</a></li>
@@ -23,9 +23,15 @@
                     <audio id="soundEffect"></audio>
                 </div>
             </a>
-        </div>
 
-        <div class="container">
+            <a onclick="toggleFullscreenMode();">
+                <div class="soundToggleButton">
+                    <img id="fullscreenToggle" class="fullscreenToggle" src="./images/fullscreen_icon.png" alt="Enter Fullscreen">
+                </div>
+            </a>
+        </nav>
+
+        <main class="container">
             <img class="background" src="./images/background.png" alt="The Awakening">
             
             <div id="contentOverlay" class="contentOverlay">
@@ -35,7 +41,7 @@
                     <div id="optionButtons" class="buttonGrid"></div>
                 </div>
             </div>
-        </div>
+        </main>
 
         <script src="./script.js"></script>
     </body>
